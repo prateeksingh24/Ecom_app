@@ -1,9 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:minimal_ecom/models/product.dart';
+import 'package:minimal_ecom/models/shop.dart';
+import 'package:provider/provider.dart';
 
 class MyProductTile extends StatelessWidget {
   final Product product;
   const MyProductTile({super.key, required this.product});
+
+  //add To Cart Button pressed
+
+  void addToCart(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: Text("Add this item to your cart?"),
+              actions: [
+                MaterialButton(
+                  //cancel button
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Cancel"),
+                ),
+
+                //yes Button
+
+                MaterialButton(
+                  onPressed: () {
+                    //pop dialog box
+                    Navigator.pop(context);
+
+                    //add to cat
+
+                    context.read<Shop>().addToCart(product);
+                  },
+                  child: Text("Yes"),
+                )
+              ],
+            ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +65,7 @@ class MyProductTile extends StatelessWidget {
                     ),
                     width: double.infinity,
                     padding: EdgeInsets.all(25),
-                    child: Icon(Icons.favorite)),
+                    child: Image.network(product.imagePath)),
               ),
               const SizedBox(
                 height: 25,
@@ -65,8 +98,19 @@ class MyProductTile extends StatelessWidget {
           ),
 
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(product.price.toStringAsFixed(2)),
+              //product price
+              Text('\$' + product.price.toStringAsFixed(2)),
+
+              //add to cart button
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Theme.of(context).colorScheme.secondary),
+                child: IconButton(
+                    onPressed: () => addToCart(context), icon: Icon(Icons.add)),
+              )
             ],
           )
         ],
