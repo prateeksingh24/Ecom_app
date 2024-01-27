@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   bool _isPasswordVisible = false;
   TextEditingController _mailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +28,14 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Login Now",
+                "Sign Up",
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 10,
               ),
               const Text(
-                "Please login to continue using our app.",
+                "Please register with your email and sign up to continue using our app.",
                 style: TextStyle(
                   fontSize: 15,
                 ),
@@ -43,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const Center(
                 child: Text(
-                  "Enter via Social Networks",
+                  "Register via Social Networks",
                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                 ),
               ),
@@ -104,14 +106,14 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextField(
 
                       controller: _mailController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: "Email",
 
                         border:OutlineInputBorder(),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 7),
+                  SizedBox(height: 7),
                   Material(
                     elevation: 4,
                     borderRadius: BorderRadius.circular(10),
@@ -136,28 +138,36 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ],
               ),
-        
+
               SizedBox(
                 height: 10,
               ),
-        
+
               //Forget Password
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Forget Password?',
-                    style: TextStyle(fontSize: 15,
-                    color: Colors.black),
+              Row(
+                children: [
+                  Checkbox(value: isChecked, onChanged: (bool? value){
+                    setState(() {
+                      isChecked = value!;
+                    });
+                  },checkColor: Colors.black,
                   ),
-                ),
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'I agree with privacy policy',
+                      style: TextStyle(fontSize: 15,
+                          color: Colors.black),
+                    ),
+                  ),
+                ],
               ),
-        
-             const  SizedBox(
+
+
+              SizedBox(
                 height: 50,
               ),
-        
+
               GestureDetector(
                 onTap: (){},
                 child: Container(
@@ -168,32 +178,33 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(
-                      color: Colors.black,
-                      width: 2
+                        color: Colors.black,
+                        width: 2
                     ),
                   ),
-                  child: const  Text(
-                    "Login",style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600
+                  child: const Text(
+                    "Sign Up",style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600
                   ),
                   ),
                 ),
               ),
-        const SizedBox(
-          height: 5,
-        ),
-        
+              SizedBox(
+                height: 5,
+              ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Text("Don't have an account?",style: TextStyle(
-                    fontWeight: FontWeight.w500,color: Colors.black
+                  Text("Don't have an account?",style: TextStyle(
+                      fontWeight: FontWeight.w500,color: Colors.black
                   ),),
                   TextButton(onPressed: (){
+                    Navigator.pop(context);
 
-                    Navigator.pushReplacementNamed(context, '/sign_up_page');
-                  }, child: const Text("Sign up",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600),))
+                    Navigator.pushNamed(context, '/login_page');
+                  }, child: Text("Login",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600),))
                 ],
               )
             ],
