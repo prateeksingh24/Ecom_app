@@ -7,8 +7,14 @@ import 'package:minimal_ecom/loginPages/login_page.dart';
 import 'package:minimal_ecom/pages/shop_page.dart';
 import 'package:minimal_ecom/themes/light_mode.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     ChangeNotifierProvider(
       create: (context) => Shop(),
