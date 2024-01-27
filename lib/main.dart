@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:minimal_ecom/loginPages/sign_up_page.dart';
 import 'package:minimal_ecom/models/shop.dart';
 import 'package:minimal_ecom/pages/cart_page.dart';
-import 'package:minimal_ecom/pages/intro_page.dart';
+import 'package:minimal_ecom/loginPages/intro_page.dart';
 import 'package:minimal_ecom/loginPages/login_page.dart';
 import 'package:minimal_ecom/pages/shop_page.dart';
 import 'package:minimal_ecom/themes/light_mode.dart';
