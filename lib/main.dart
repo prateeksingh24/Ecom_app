@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:minimal_ecom/models/shop.dart';
 import 'package:minimal_ecom/pages/cart_page.dart';
 import 'package:minimal_ecom/pages/intro_page.dart';
+import 'package:minimal_ecom/loginPages/login_page.dart';
 import 'package:minimal_ecom/pages/shop_page.dart';
 import 'package:minimal_ecom/themes/light_mode.dart';
 import 'package:provider/provider.dart';
@@ -23,11 +24,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: lightMode,
-      initialRoute: '/intro_page',
+      initialRoute: '/login_page',
       routes: {
         '/intro_page': (context) => const IntroPage(),
         '/shop_page': (context) => const ShopPage(),
         '/cart_page': (context) => const CartPage(),
+        '/login_page': (context)=> const LoginPage(),
       },
     );
   }
