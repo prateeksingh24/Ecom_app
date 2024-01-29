@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_ecom/componenets/my_list_tile.dart';
 
@@ -47,8 +49,9 @@ class MyDrawer extends StatelessWidget {
             child: MyListTile(
               text: "Exit",
               icon: Icons.logout,
-              onTap: () => Navigator.pushNamedAndRemoveUntil(
-                  context, '/intro_page', (route) => false),
+              onTap: () async {
+               await FirebaseAuth.instance.signOut();
+              }
             ),
           )
 

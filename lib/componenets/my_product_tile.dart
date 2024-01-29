@@ -64,7 +64,7 @@ class MyProductTile extends StatelessWidget {
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                     width: double.infinity,
-                    padding: EdgeInsets.all(25),
+                    padding: const EdgeInsets.all(25),
                     child: Image.network(product.imagePath)),
               ),
               const SizedBox(

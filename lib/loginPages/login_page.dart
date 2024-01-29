@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
+import 'package:minimal_ecom/auth/googleSignInAuth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,8 +12,43 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
+  final _formKey = GlobalKey<FormState>();
   TextEditingController _mailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+ Future <void> signInWithEmailAndPassword() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+       await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _mailController.text,
+          password: _passwordController.text,
+      );
+       setState(() {
+         _isLoading =false;
+       });
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _isLoading =false;
+      });
+      if (e.code == 'user-not-found') {
+
+         ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("No user found for that email."))
+        );
+      } else if (e.code == 'wrong-password') {
+         ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Wrong password provided for that user."))
+        );
+      }
+      else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: ${e.message ?? 'Unknown error'}")),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +108,9 @@ class _LoginPageState extends State<LoginPage> {
                     width: 20,
                   ),
                   FlutterSocialButton(
-                    onTap: () {},
+                    onTap: () {
+                      signInWithGoogle();
+                    },
                     buttonType: ButtonType.google,
                     mini: true,
                     // Button type for different type buttons
@@ -94,92 +133,119 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(
                 height: 30,
               ),
-              Column(
+              Form(
+                key: _formKey,
+                child: Column(
+                
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Material(
+                      elevation: 4.0,
+                      borderRadius: BorderRadius.circular(10),
+                      child: TextFormField(
+                        controller: _mailController,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (text){
+                          if(text == null || text.isEmpty){
+                            return "Please Enter Correct Email";
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          label: Text("Email",style: TextStyle(
+                            color: Colors.black
+                          ),),
 
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Material(
-                    elevation: 4.0,
-                    borderRadius: BorderRadius.circular(10),
-                    child: TextField(
-
-                      controller: _mailController,
-                      decoration: const InputDecoration(
-                        hintText: "Email",
-
-                        border:OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 7),
-                  Material(
-                    elevation: 4,
-                    borderRadius: BorderRadius.circular(10),
-                    child: TextField(
-                      controller: _passwordController,
-                      obscureText: !_isPasswordVisible,
-                      decoration: InputDecoration(
-                        hintText: "Password",
-                        border: const OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          icon: Icon(_isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off),
-                          onPressed: () {
-                            setState(() {
-                              _isPasswordVisible = !_isPasswordVisible;
-                            });
-                          },
+                
+                          border:OutlineInputBorder(),
                         ),
                       ),
                     ),
-                  )
-                ],
-              ),
-        
-              SizedBox(
-                height: 10,
-              ),
-        
-              //Forget Password
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Forget Password?',
-                    style: TextStyle(fontSize: 15,
-                    color: Colors.black),
-                  ),
-                ),
-              ),
-        
-             const  SizedBox(
-                height: 50,
-              ),
-        
-              GestureDetector(
-                onTap: (){},
-                child: Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 2
+                    const SizedBox(height: 15),
+                    Material(
+                      elevation: 4,
+                      borderRadius: BorderRadius.circular(10),
+                      child: TextFormField(
+                        controller: _passwordController,
+                        obscureText: !_isPasswordVisible,
+                        validator: (text){
+                          if(text == null || text.isEmpty){
+                            return "Please Enter Password";
+                          }
+                        },
+                        decoration: InputDecoration(
+                          label: Text("Password",style: TextStyle(
+                              color: Colors.black
+                          ),),
+                          border: const OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            icon: Icon(_isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,semanticLabel: _isPasswordVisible
+                                ? 'Hide Password'
+                                : 'Show Password',),
+
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  child: const  Text(
-                    "Login",style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600
-                  ),
-                  ),
+
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    //Forget Password
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Forget Password?',
+                          style: TextStyle(fontSize: 15,
+                              color: Colors.black),
+                        ),
+                      ),
+                    ),
+
+                    const  SizedBox(
+                      height: 50,
+                    ),
+
+                    GestureDetector(
+                      onTap: ()async{
+                        if(_formKey.currentState!.validate()){
+                          await signInWithEmailAndPassword();
+                        }
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                              color: Colors.black,
+                              width: 2
+                          ),
+                        ),
+                        child: _isLoading ? const Center(child: CircularProgressIndicator(color: Colors.black,)) : const  Text(
+                          "Login",style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600
+                        ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+        
+
         const SizedBox(
           height: 5,
         ),

@@ -11,6 +11,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   bool _isPasswordVisible = false;
+  final _formKey = GlobalKey<FormState>();
   TextEditingController _mailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   bool isChecked = false;
@@ -96,98 +97,112 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(
                 height: 30,
               ),
-              Column(
+              Form(
+                key: _formKey,
+                child: Column(
 
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Material(
-                    elevation: 4.0,
-                    borderRadius: BorderRadius.circular(10),
-                    child: TextField(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Material(
+                      elevation: 4.0,
+                      borderRadius: BorderRadius.circular(10),
+                      child: TextFormField(
+                        controller: _mailController,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (text){
+                          if(text == null || text.isEmpty){
+                            return "Please Enter Correct Email";
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          label: Text("Email",style: TextStyle(
+                              color: Colors.black
+                          ),),
 
-                      controller: _mailController,
-                      decoration: InputDecoration(
-                        hintText: "Email",
 
-                        border:OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 7),
-                  Material(
-                    elevation: 4,
-                    borderRadius: BorderRadius.circular(10),
-                    child: TextField(
-                      controller: _passwordController,
-                      obscureText: !_isPasswordVisible,
-                      decoration: InputDecoration(
-                        hintText: "Password",
-                        border: const OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          icon: Icon(_isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off),
-                          onPressed: () {
-                            setState(() {
-                              _isPasswordVisible = !_isPasswordVisible;
-                            });
-                          },
+                          border:OutlineInputBorder(),
                         ),
                       ),
                     ),
-                  )
-                ],
-              ),
-
-              SizedBox(
-                height: 10,
-              ),
-
-              //Forget Password
-              Row(
-                children: [
-                  Checkbox(value: isChecked, onChanged: (bool? value){
-                    setState(() {
-                      isChecked = value!;
-                    });
-                  },checkColor: Colors.black,
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'I agree with privacy policy',
-                      style: TextStyle(fontSize: 15,
-                          color: Colors.black),
+                    const SizedBox(height: 15),
+                    Material(
+                      elevation: 4,
+                      borderRadius: BorderRadius.circular(10),
+                      child: TextFormField(
+                        controller: _passwordController,
+                        obscureText: !_isPasswordVisible,
+                        validator: (text){
+                          if(text == null || text.isEmpty){
+                            return "Please Enter Password";
+                          }
+                        },
+                        decoration: InputDecoration(
+                          label: Text("Password",style: TextStyle(
+                              color: Colors.black
+                          ),),
+                          border: const OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            icon: Icon(_isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
 
-
-              SizedBox(
-                height: 50,
-              ),
-
-              GestureDetector(
-                onTap: (){},
-                child: Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                        color: Colors.black,
-                        width: 2
+                    SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  child: const Text(
-                    "Sign Up",style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600
-                  ),
-                  ),
+
+                    //Forget Password
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Forget Password?',
+                          style: TextStyle(fontSize: 15,
+                              color: Colors.black),
+                        ),
+                      ),
+                    ),
+
+                    const  SizedBox(
+                      height: 50,
+                    ),
+
+                    GestureDetector(
+                      onTap: (){
+                        if(_formKey.currentState!.validate()){
+                          Navigator.pushNamedAndRemoveUntil(context, '/shop_page', (route) => false);
+                        }
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                              color: Colors.black,
+                              width: 2
+                          ),
+                        ),
+                        child: const  Text(
+                          "Sign Up",style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600
+                        ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(
